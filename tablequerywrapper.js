@@ -74,8 +74,6 @@ var TableQueryWrapper = function (query, container, selectClause, whereClause, o
 TableQueryWrapper.prototype.sendAndDraw = function () {
     this.query.abort();
     var queryClause = this.selectClause + ' ' + this.whereClause + ' ' + this.sortQueryClause + ' ' + this.pageQueryClause;
-    console.log(queryClause);
-
     this.query.setQuery(queryClause);
     this.table.setSelection([]);
     var self = this;
@@ -103,15 +101,13 @@ TableQueryWrapper.prototype.handleResponse = function (response) {
         //this.table.draw(this.currentDataTable, this.tableOptions);
 
         var view = new google.visualization.DataView(this.currentDataTable);
-
         if (this.whereClause.length > 0) {
             view.setColumns([0, 1, 2, 3]);
         }
         else {
             view.setColumns([0, 2, 3]);
         }
-
-        this.table.draw(view, this.tableOptions);//{ allowHtml: true, showRowNumber: true, width: '100%', height: '80%' });
+        this.table.draw(view, this.tableOptions);
     }
 };
 
