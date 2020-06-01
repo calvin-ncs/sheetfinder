@@ -35,6 +35,17 @@
  */
 var TableQueryWrapper = function (query, container, selectClause, whereClause, options) {
 
+    var cssClassNames = {
+        'headerRow': '',
+        'tableRow': '',
+        'oddTableRow': '',
+        'selectedTableRow': '',
+        'hoverTableRow': '',
+        'headerCell': 'h5 text-center',
+        'tableCell': 'h6',
+        'rowNumberCell': 'text-center'
+    };
+
     this.table = new google.visualization.Table(container);
     this.query = query;
     this.selectClause = selectClause;
@@ -56,6 +67,9 @@ var TableQueryWrapper = function (query, container, selectClause, whereClause, o
     options['page'] = 'event';
     options['showRowNumber'] = true;
     options['allowHtml'] = true;
+    options['cssClassNames'] = cssClassNames;
+    options['width'] = '100%';
+    options['height'] = '100%';
     var buttonConfig = 'pagingButtonsConfiguration';
     options[buttonConfig] = options[buttonConfig] || 'both';
     options['pageSize'] = (options['pageSize'] > 0) ? options['pageSize'] : 1000;
@@ -74,7 +88,7 @@ var TableQueryWrapper = function (query, container, selectClause, whereClause, o
 TableQueryWrapper.prototype.sendAndDraw = function () {
     this.query.abort();
     var queryClause = this.selectClause + ' ' + this.whereClause + ' ' + this.sortQueryClause + ' ' + this.pageQueryClause;
-    console.log(queryClause);
+    //console.log(queryClause);
 
     this.query.setQuery(queryClause);
     this.table.setSelection([]);
@@ -93,11 +107,11 @@ TableQueryWrapper.prototype.handleResponse = function (response) {
 
 
         var formatter = new google.visualization.PatternFormat(
-            '<center><div class="show-only-if-exists" style="visibility:hidden"><a href="{0}"><i class="far fa-file"></i></a></div></center>');
+            '<div class="show-only-if-exists text-center" style="visibility:hidden"><a class="btn btn-secondary" href="{0}"><i class="far fa-file"></i></a></div>');
         formatter.format(this.currentDataTable, [2]);
 
         var formatter2 = new google.visualization.PatternFormat(
-            '<center><div class="show-only-if-exists" style="visibility:hidden"><a href="{0}"><i class="fas fa-link"></i></a></div></center>');
+            '<div class="show-only-if-exists text-center" style="visibility:hidden"><a class="btn btn-secondary" href="{0}"><i class="fas fa-link"></i></a></div>');
         formatter2.format(this.currentDataTable, [3]);
 
         //this.table.draw(this.currentDataTable, this.tableOptions);
@@ -114,7 +128,6 @@ TableQueryWrapper.prototype.handleResponse = function (response) {
         this.table.draw(view, this.tableOptions);//{ allowHtml: true, showRowNumber: true, width: '100%', height: '80%' });
 
         var tags = document.getElementsByClassName('show-only-if-exists');
-        console.log(tags);
         for (var ii = 0; ii < tags.length; ii++) {
             if (tags[ii].getElementsByTagName('a')[0].getAttribute("href").length > 0) {
                 tags[ii].style.visibility = "visible";

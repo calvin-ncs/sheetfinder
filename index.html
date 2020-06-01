@@ -2,11 +2,12 @@
 <html>
 
 <head>
-    <title>Lists</title>
+    <title>Song List</title>
     <link rel="stylesheet" type="text/css"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/all.min.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
         integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
@@ -61,13 +62,14 @@
 </head>
 
 <body>
-    <container>
-
-        <form action="" onSubmit="handleSearch(); return false;">
-            <div class="form-group">
-                <label for="row-select"> Number of rows:</label>
-                <select class="form-control" id="row-select"
-                    onChange=" setOption('pageSize', parseInt(this.value, 10))">
+    <div class="container-fluid">
+        <div class="row display-1 pb-3">Song List</div>
+        <form class="form-inline" action="" onSubmit="handleSearch(); return false;">
+            <div class="form-group col-auto mr-auto">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Rows</span>
+                </div>
+                <select class="custom-select" onChange=" setOption('pageSize', parseInt(this.value, 10))">
                     <option value="5">5</option>
                     <option value="10">10</option>
                     <option selected=selected value="20">20</option>
@@ -75,14 +77,18 @@
                     <option value="-1">-1</option>
                 </select>
             </div>
-            <div class="form-group">
-                <input type="text" id="filter" name="filter">
-                <button type='button' onclick="handleSearch()">Search</button>
+            <div class="form-group col-auto">
+                <input class="form-control" type="text" id="filter" name="filter" placeholder="title or lyrics">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type='button' onclick="handleSearch()">Search</button>
+                </div>
             </div>
         </form>
         <br />
-        <div id="table"></div>
-    </container>
+        <div class="table-responsive">
+            <div class="table table-striped" id="table"></div>
+        </div>
+    </div>
 </body>
 
 </html>
