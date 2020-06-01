@@ -35,12 +35,13 @@
  */
 var TableQueryWrapper = function (query, container, selectClause, whereClause, options) {
 
+
     var cssClassNames = {
-        'headerRow': '',
-        'tableRow': '',
-        'oddTableRow': '',
-        'selectedTableRow': '',
-        'hoverTableRow': '',
+        'headerRow': 'default',
+        'tableRow': 'default',
+        'oddTableRow': 'default',
+        'selectedTableRow': 'default',
+        'hoverTableRow': 'default',
         'headerCell': 'h5 text-center',
         'tableCell': 'h6',
         'rowNumberCell': 'text-center'
