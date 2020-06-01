@@ -93,11 +93,11 @@ TableQueryWrapper.prototype.handleResponse = function (response) {
 
 
         var formatter = new google.visualization.PatternFormat(
-            '<a href="{0}">{0}</a>');
+            '<center><div class="show-only-if-exists" style="visibility:hidden"><a href="{0}"><i class="far fa-file"></i></a></div></center>');
         formatter.format(this.currentDataTable, [2]);
 
         var formatter2 = new google.visualization.PatternFormat(
-            '<a href="{0}">{0}</a>');
+            '<center><div class="show-only-if-exists" style="visibility:hidden"><a href="{0}"><i class="fas fa-link"></i></a></div></center>');
         formatter2.format(this.currentDataTable, [3]);
 
         //this.table.draw(this.currentDataTable, this.tableOptions);
@@ -112,6 +112,14 @@ TableQueryWrapper.prototype.handleResponse = function (response) {
         }
 
         this.table.draw(view, this.tableOptions);//{ allowHtml: true, showRowNumber: true, width: '100%', height: '80%' });
+
+        var tags = document.getElementsByClassName('show-only-if-exists');
+        console.log(tags);
+        for (var ii = 0; ii < tags.length; ii++) {
+            if (tags[ii].getElementsByTagName('a')[0].getAttribute("href").length > 0) {
+                tags[ii].style.visibility = "visible";
+            }
+        }
     }
 };
 
