@@ -72,8 +72,8 @@ var TableQueryWrapper = function (query, container, selectClause, whereClause, o
     options['cssClassNames'] = cssClassNames;
     options['width'] = '100%';
     options['height'] = '100%';
-    var buttonConfig = 'pagingButtonsConfiguration';
-    options[buttonConfig] = options[buttonConfig] || 'both';
+    //var buttonConfig = 'pagingButtonsConfiguration';
+    //options[buttonConfig] = options[buttonConfig] || 'both';
 
     options['pageSize'] = (options['pageSize'] > 0) ? options['pageSize'] : 1000;
     this.pageSize = options['pageSize'];
@@ -135,6 +135,9 @@ TableQueryWrapper.prototype.handleResponse = function (response) {
                 tags[ii].style.visibility = "visible";
             }
         }
+
+        // little hack to remove the native page bar of google data table
+        document.getElementsByClassName('google-visualization-table-div-page')[0].style.visibility = "hidden";
     }
 };
 
