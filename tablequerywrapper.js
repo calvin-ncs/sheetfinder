@@ -64,6 +64,7 @@ var TableQueryWrapper = function (query, container, selectClause, whereClause, o
     options = options || {};
     options = TableQueryWrapper.clone(options);
 
+
     options['sort'] = 'event';
     options['page'] = 'event';
     options['showRowNumber'] = true;
@@ -73,6 +74,7 @@ var TableQueryWrapper = function (query, container, selectClause, whereClause, o
     options['height'] = '100%';
     var buttonConfig = 'pagingButtonsConfiguration';
     options[buttonConfig] = options[buttonConfig] || 'both';
+
     options['pageSize'] = (options['pageSize'] > 0) ? options['pageSize'] : 1000;
     this.pageSize = options['pageSize'];
     this.tableOptions = options;
@@ -127,7 +129,6 @@ TableQueryWrapper.prototype.handleResponse = function (response) {
         }
 
         this.table.draw(view, this.tableOptions);//{ allowHtml: true, showRowNumber: true, width: '100%', height: '80%' });
-
         var tags = document.getElementsByClassName('show-only-if-exists');
         for (var ii = 0; ii < tags.length; ii++) {
             if (tags[ii].getElementsByTagName('a')[0].getAttribute("href").length > 0) {
@@ -192,6 +193,20 @@ TableQueryWrapper.prototype.setPageQueryClause = function (pageIndex) {
     return true;
 };
 
+TableQueryWrapper.prototype.nextPage = function () {
+    newPage = this.currentPageIndex + 1;
+
+    if (this.setPageQueryClause(newPage)) {
+        this.sendAndDraw();
+    }
+};
+
+TableQueryWrapper.prototype.prevPage = function () {
+    newPage = this.currentPageIndex - 1;
+    if (this.setPageQueryClause(newPage)) {
+        this.sendAndDraw();
+    }
+};
 
 /** Performs a shallow clone of the given object. */
 TableQueryWrapper.clone = function (obj) {
