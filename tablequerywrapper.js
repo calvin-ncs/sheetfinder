@@ -251,6 +251,11 @@ TableQueryWrapper.prototype.prevPage = function () {
     }
 };
 
+TableQueryWrapper.prototype.clearSelection = function () {
+    this.table.setSelection([]);
+    this.sendAndDraw();
+}
+
 /** Performs a shallow clone of the given object. */
 TableQueryWrapper.clone = function (obj) {
     var newObj = {};
