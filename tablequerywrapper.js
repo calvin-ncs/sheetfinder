@@ -40,8 +40,8 @@ var TableQueryWrapper = function (query, container, selectClause, whereClause, o
         'headerRow': 'default',
         'tableRow': 'default',
         'oddTableRow': 'default',
-        'selectedTableRow': 'default',
-        'hoverTableRow': 'default',
+        'selectedTableRow': 'table-info',
+        'hoverTableRow': 'table-hover',
         'headerCell': 'h5 text-center',
         'tableCell': 'h6',
         'rowNumberCell': 'text-center'
@@ -60,6 +60,7 @@ var TableQueryWrapper = function (query, container, selectClause, whereClause, o
     var addListener = google.visualization.events.addListener;
     addListener(this.table, 'page', function (e) { self.handlePage(e) });
     addListener(this.table, 'sort', function (e) { self.handleSort(e) });
+    addListener(this.table, 'select', function (e) { self.handleSelect(e) });
 
     options = options || {};
     options = TableQueryWrapper.clone(options);
@@ -108,10 +109,13 @@ TableQueryWrapper.prototype.handleResponse = function (response) {
     } else {
         this.currentDataTable = response.getDataTable();
 
-
         var formatter = new google.visualization.PatternFormat(
+            '<pre>{0}</pre>');
+        formatter.format(this.currentDataTable, [1]);
+
+        var formatter1 = new google.visualization.PatternFormat(
             '<div class="show-only-if-exists text-center" style="visibility:hidden"><a class="btn btn-secondary" href="{0}"><i class="far fa-file"></i></a></div>');
-        formatter.format(this.currentDataTable, [2]);
+        formatter1.format(this.currentDataTable, [2]);
 
         var formatter2 = new google.visualization.PatternFormat(
             '<div class="show-only-if-exists text-center" style="visibility:hidden"><a class="btn btn-secondary" href="{0}"><i class="fas fa-link"></i></a></div>');
@@ -138,6 +142,14 @@ TableQueryWrapper.prototype.handleResponse = function (response) {
 
         // little hack to remove the native page bar of google data table
         document.getElementsByClassName('google-visualization-table-div-page')[0].style.visibility = "hidden";
+
+        // show "not found" message box
+        if (this.currentDataTable.getNumberOfRows() == 0) {
+            document.getElementById("message-not-found").style.display = "inline";
+        }
+        else {
+            document.getElementById("message-not-found").style.display = "none";
+        }
     }
 };
 
@@ -165,6 +177,34 @@ TableQueryWrapper.prototype.handlePage = function (properties) {
     }
     if (this.setPageQueryClause(newPage)) {
         this.sendAndDraw();
+    }
+};
+
+TableQueryWrapper.prototype.handleSelect = function (properties) {
+    var selection = this.table.getSelection();
+    if (selection.length > 0) {
+        var selRow = selection[0].row;
+
+        var title = document.getElementById('detail-display-title');
+        var btns = document.getElementById('detail-display-links');
+        var details = document.getElementById('detail-display-details');
+
+        title.innerHTML = this.currentDataTable.getValue(selRow, 0);
+
+        var _file = this.currentDataTable.getValue(selRow, 2);
+        var _link = this.currentDataTable.getValue(selRow, 3);
+
+        btns.innerHTML = '';
+        if (_file && _file.length > 0) {
+            btns.innerHTML += '<div class="col"> <a class="btn btn-secondary" href="' + _file + '"><i class="far fa-file"></i></a></div>'
+        }
+
+        if (_link && _link.length > 0) {
+            btns.innerHTML += '<div class="col"><a class="btn btn-secondary" href="' + _link + '"><i class="fas fa-link"></i></a></div>';
+        }
+        details.innerHTML = this.currentDataTable.getValue(selRow, 1).trim();
+
+        $('#detail-display').modal('show');
     }
 };
 

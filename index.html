@@ -83,38 +83,76 @@
         <div class="form-inline">
             <div class="form-group col-auto">
                 <div class="input-group-prepend">
-                    <span class="input-group-text">Show</span>
+                    <span class="input-group-text">顯示</span>
                 </div>
                 <select class="custom-select" onChange=" setOption('pageSize', parseInt(this.value, 10))">
-                    <option value="5">5 rows</option>
-                    <option value="10">10 rows</option>
-                    <option selected=selected value="20">20 rows</option>
-                    <option value="50">50 rows</option>
-                    <option value="-1">all rows</option>
+                    <option value="5"> 5行</option>
+                    <option value="10">10行</option>
+                    <option selected=selected value="20">20行</option>
+                    <option value="50">50行</option>
+                    <option value="-1">全部</option>
                 </select>
             </div>
             <div class="form-group col-auto mr-auto">
                 <div class="input-group-prepend">
-                    <span class="input-group-text">Page</span>
+                    <span class="input-group-text">分頁</span>
                 </div>
-                <div class="btn btn-outline-secondary" type='button' id="btn_prev" onclick="handlePrevPage()"><i
-                        class="fas fa-angle-left"></i></div>
-                <div class="btn btn-outline-secondary" type='button' id="btn_next" onclick="handleNextPage()"><i
-                        class="fas fa-angle-right"></i></div>
+                <button class="btn btn-outline-secondary" type='button' id="btn_prev" onclick="handlePrevPage()"><i
+                        class="fas fa-angle-left"></i></button>
+                <button class="btn btn-outline-secondary" type='button' id="btn_next" onclick="handleNextPage()"><i
+                        class="fas fa-angle-right"></i></button>
             </div>
 
             <div class="form-group col-auto">
-                <input class="form-control" type="text" id="filter" name="filter" placeholder="Title or lyrics">
+                <input class="form-control" type="text" id="filter" name="filter" placeholder="歌名或歌詞">
                 <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" type='button' onclick="handleSearch()">Search</button>
-                    <button class="btn btn-outline-secondary" type='button' onclick="handleClearSearch()">Clear</button>
+                    <button class="btn btn-outline-secondary" type='button' onclick="handleSearch()">搜尋</button>
+                    <button class="btn btn-outline-secondary" type='button' onclick="handleClearSearch()">清除</button>
                 </div>
             </div>
         </div>
         <br />
-
-        <div class=" table-responsive">
+        <div class="row" id="message-not-found" style="display:none">
+            <div class="mx-auto">
+                <div class="jumbotron jumbotron-fluid">
+                    <h1 class="display-4"><i class="fas fa-exclamation-circle"></i>噢﹗找不到</h1>
+                    <p class="lead">我們好像沒有這份譜 / 或許試試用不同的字句搜尋一下﹗</p>
+                    <hr class="my-4">
+                    <p>若你找到這份譜的話，請與我們分享，謝謝！</p>
+                    <a class="btn btn-secondary btn-lg"
+                        href="https://docs.google.com/forms/d/e/1FAIpQLSc9RhTnTt6IROwFTBhOm26bNs4xlx3znmebJC3w8V7w3DNpMQ/viewform?bc=transparent&f=%2522Open%2BSans%2522%252C%2Bsans-serif&hl=zh_TW&htc=%2523eeeeee&id=1jVBbZbOWh9RAaJ4Zk0q-Uvsr-6Zfk6UdrFOddxnqfCE&lc=%2523298cca&pli=1&tc=%2523616161&ttl=0&usp=embedded_form_link">Google
+                        Form</a>
+                </div>
+            </div>
+        </div>
+        <div class="table-responsive">
             <div class="table table-striped table-hover" id="table"></div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="detail-display" tabindex="-1" role="dialog" aria-labelledby="detail-display-title"
+            aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="detail-display-title"></h5>
+
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container-fluid">
+                            <div class="row" id="detail-display-links"></div>
+                            <div class="row">
+                                <pre>
+                                <p id="detail-display-details"></p>
+                                </pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </body>
