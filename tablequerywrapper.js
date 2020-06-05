@@ -60,7 +60,7 @@ var TableQueryWrapper = function (query, container, selectClause, whereClause, o
     var addListener = google.visualization.events.addListener;
     addListener(this.table, 'page', function (e) { self.handlePage(e) });
     addListener(this.table, 'sort', function (e) { self.handleSort(e) });
-    addListener(this.table, 'select', function (e) { self.handleSelect(e) });
+    // addListener(this.table, 'select', function (e) { self.handleSelect(e) });
 
     options = options || {};
     options = TableQueryWrapper.clone(options);
@@ -180,33 +180,33 @@ TableQueryWrapper.prototype.handlePage = function (properties) {
     }
 };
 
-TableQueryWrapper.prototype.handleSelect = function (properties) {
-    var selection = this.table.getSelection();
-    if (selection.length > 0) {
-        var selRow = selection[0].row;
+// TableQueryWrapper.prototype.handleSelect = function (properties) {
+// var selection = this.table.getSelection();
+// if (selection.length > 0) {
+//     var selRow = selection[0].row;
 
-        var title = document.getElementById('detail-display-title');
-        var btns = document.getElementById('detail-display-links');
-        var details = document.getElementById('detail-display-details');
+//     var title = document.getElementById('detail-display-title');
+//     var btns = document.getElementById('detail-display-links');
+//     var details = document.getElementById('detail-display-details');
 
-        title.innerHTML = this.currentDataTable.getValue(selRow, 0);
+//     title.innerHTML = this.currentDataTable.getValue(selRow, 0);
 
-        var _file = this.currentDataTable.getValue(selRow, 2);
-        var _link = this.currentDataTable.getValue(selRow, 3);
+//     var _file = this.currentDataTable.getValue(selRow, 2);
+//     var _link = this.currentDataTable.getValue(selRow, 3);
 
-        btns.innerHTML = '';
-        if (_file && _file.length > 0) {
-            btns.innerHTML += '<div class="col"> <a class="btn btn-secondary" href="' + _file + '"><i class="far fa-file"></i></a></div>'
-        }
+//     btns.innerHTML = '';
+//     if (_file && _file.length > 0) {
+//         btns.innerHTML += '<div class="col"><a class="btn btn-secondary" href="' + _file + '"><i class="far fa-file"></i></a></div>'
+//     }
 
-        if (_link && _link.length > 0) {
-            btns.innerHTML += '<div class="col"><a class="btn btn-secondary" href="' + _link + '"><i class="fas fa-link"></i></a></div>';
-        }
-        details.innerHTML = this.currentDataTable.getValue(selRow, 1).trim();
+//     if (_link && _link.length > 0) {
+//         btns.innerHTML += '<div class="col"><a class="btn btn-secondary" href="' + _link + '"><i class="fas fa-link"></i></a></div>';
+//     }
+//     details.innerHTML = this.currentDataTable.getValue(selRow, 1).trim();
 
-        $('#detail-display').modal('show');
-    }
-};
+//     $('#detail-display').modal('show');
+// }
+// };
 
 
 /**
