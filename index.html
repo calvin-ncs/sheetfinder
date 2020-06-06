@@ -76,10 +76,21 @@
             tableQueryWrapper.nextPage();
         }
 
-        function sendWithWhatsapp(content) {
+        function shareWithWhatsapp(content) {
             str = content.children[1].innerHTML;
             const url = 'https://wa.me/?text=' + encodeURIComponent(str);
             window.open(url);
+        }
+
+        function generalShare(content) {
+            /* Select the text field */
+            if (navigator.share) {
+                navigator.share({
+                    text: content.children[1].innerHTML,
+                }).then(() => console.log('Successful share'))
+                    .catch(error => console.log('Error sharing:', error));
+            }
+
         }
 
     </script>

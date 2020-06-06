@@ -110,8 +110,8 @@ TableQueryWrapper.prototype.handleResponse = function (response) {
         this.currentDataTable = response.getDataTable();
 
         this.currentDataTable.addColumn('string', 'Share');
-        var formatter3 = new google.visualization.PatternFormat('<div class="text-center"><div class="btn btn-secondary" onclick="sendWithWhatsapp(this)"><i class="fa fa-whatsapp" aria-hidden="true"></i><p style="display:none" id="wa">{0}</p></div></div>');
-        formatter3.format(this.currentDataTable, [1], 4);
+        var formatter3 = new google.visualization.PatternFormat('<div class="text-center"><div class="mx-1 btn btn-secondary" onclick="shareWithWhatsapp(this)"><i class="fa fa-whatsapp" aria-hidden="true"></i><p style="display:none">{0}\n\n{1}</p></div><div class="mx-1 btn btn-secondary" onclick="generalShare(this)"><i class="fa fa-share-alt" aria-hidden="true"></i><p style="display:none">{0}\n\n{1}</p></div></div>');
+        formatter3.format(this.currentDataTable, [0, 1], 4);
 
         var formatter = new google.visualization.PatternFormat(
             '<pre>{0}</pre>');
