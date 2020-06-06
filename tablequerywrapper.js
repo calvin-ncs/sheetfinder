@@ -90,6 +90,8 @@ var TableQueryWrapper = function (query, container, selectClause, whereClause, o
  * be redrawn upon each refresh.
  */
 TableQueryWrapper.prototype.sendAndDraw = function () {
+    document.getElementById('query-progress').style.visibility = "true";
+
     this.query.abort();
     var queryClause = this.selectClause + ' ' + this.whereClause + ' ' + this.sortQueryClause + ' ' + this.pageQueryClause;
     //console.log(queryClause);
@@ -155,6 +157,8 @@ TableQueryWrapper.prototype.handleResponse = function (response) {
         else {
             document.getElementById("message-not-found").style.display = "none";
         }
+
+        document.getElementById('query-progress').style.visibility = "hidden";
     }
 };
 
