@@ -109,6 +109,10 @@ TableQueryWrapper.prototype.handleResponse = function (response) {
     } else {
         this.currentDataTable = response.getDataTable();
 
+        this.currentDataTable.addColumn('string', 'Share');
+        var formatter3 = new google.visualization.PatternFormat('<div class="text-center"><div class="btn btn-secondary" onclick="sendWithWhatsapp(this)"><i class="fa fa-whatsapp" aria-hidden="true"></i><p style="display:none" id="wa">{0}</p></div></div>');
+        formatter3.format(this.currentDataTable, [1], 4);
+
         var formatter = new google.visualization.PatternFormat(
             '<pre>{0}</pre>');
         formatter.format(this.currentDataTable, [1]);
@@ -121,15 +125,16 @@ TableQueryWrapper.prototype.handleResponse = function (response) {
             '<div class="show-only-if-exists text-center" style="visibility:hidden"><a class="btn btn-secondary" href="{0}"><i class="fas fa-link"></i></a></div>');
         formatter2.format(this.currentDataTable, [3]);
 
+
         //this.table.draw(this.currentDataTable, this.tableOptions);
 
         var view = new google.visualization.DataView(this.currentDataTable);
 
         if (this.whereClause.length > 0) {
-            view.setColumns([0, 1, 2, 3]);
+            view.setColumns([0, 1, 2, 3, 4]);
         }
         else {
-            view.setColumns([0, 2, 3]);
+            view.setColumns([0, 2, 3, 4]);
         }
 
         this.table.draw(view, this.tableOptions);//{ allowHtml: true, showRowNumber: true, width: '100%', height: '80%' });

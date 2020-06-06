@@ -6,6 +6,9 @@
     <title>詩歌搜尋</title>
     <link rel="stylesheet" type="text/css"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/all.min.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript" src="tablequerywrapper.js"></script>
 
@@ -71,6 +74,12 @@
 
         function handleNextPage() {
             tableQueryWrapper.nextPage();
+        }
+
+        function sendWithWhatsapp(content) {
+            str = content.children[1].innerHTML;
+            const url = 'https://wa.me/?text=' + encodeURIComponent(str);
+            window.open(url);
         }
 
     </script>
