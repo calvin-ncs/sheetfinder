@@ -76,25 +76,44 @@
             tableQueryWrapper.nextPage();
         }
 
-        function shareWithWhatsapp(content) {
-            str = content.children[1].innerHTML;
+        function shareWithWhatsapp(row) {
+            detail = tableQueryWrapper.getRowSummary(row);
+            str = detail.name + '\n' + detail.lyric;
             const url = 'https://wa.me/?text=' + encodeURIComponent(str);
             window.open(url);
         }
 
-        function generalShare(content) {
+        function generalShare(row) {
             /* Select the text field */
             if (navigator.share) {
+
+                detail = tableQueryWrapper.getRowSummary(row);
+                str = detail.name + '\n' + detail.lyric;
+
                 navigator.share({
-                    text: content.children[1].innerHTML,
+                    title: detail.name,
+                    text: str,
                 }).then(() => console.log('Successful share'))
                     .catch(error => console.log('Error sharing:', error));
             }
+        }
 
+        function copyToClipboard(row) {
+
+            detail = tableQueryWrapper.getRowSummary(row);
+            str = '<h2 style="font-size:16px; font-family:PingFangHK-Regular,Microsoft JhengHei,sans-serif;">' + detail.name + '</h2>' +
+                '<pre>' + detail.lyric + '</pre>';
+
+            function listener(e) {
+                e.clipboardData.setData("text/html", str);
+                e.preventDefault();
+            }
+            document.addEventListener("copy", listener);
+            document.execCommand("copy");
+            document.removeEventListener("copy", listener);
         }
 
     </script>
-
 </head>
 
 <body>

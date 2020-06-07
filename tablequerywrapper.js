@@ -112,9 +112,18 @@ TableQueryWrapper.prototype.handleResponse = function (response) {
         this.currentDataTable = response.getDataTable();
 
         this.currentDataTable.addColumn('string', 'Share');
-        var formatter3 = new google.visualization.PatternFormat('<div class="text-center"><div class="mx-1 btn btn-secondary" onclick="shareWithWhatsapp(this)"><i class="fa fa-whatsapp" aria-hidden="true"></i><p style="display:none">{0}\n\n{1}</p></div><div class="mx-1 btn btn-secondary" onclick="generalShare(this)"><i class="fa fa-share-alt" aria-hidden="true"></i><p style="display:none">{0}\n\n{1}</p></div></div>');
-        formatter3.format(this.currentDataTable, [0, 1], 4);
+        //var formatter3 = new google.visualization.PatternFormat('<div class="text-center"><div class="mx-1 btn btn-secondary" onclick="shareWithWhatsapp(this)"><i class="fa fa-whatsapp" aria-hidden="true"></i><p style="display:none">{0}\n\n{1}</p></div><div class= "mx-1 btn btn-secondary" onclick = "generalShare(this)" > <i class="fa fa-share-alt" aria-hidden="true"></i><p style="display:none">{0}\n\n{1}</p></div ></div > ');
+        //formatter3.format(this.currentDataTable, [0, 1], 4);
 
+        for (row = 0; row < this.currentDataTable.getNumberOfRows(); row++) {
+            this.currentDataTable.setCell(row, 4,
+                '<div class="text-center">' +
+                '<div class="mx-1 btn btn-secondary" onclick="shareWithWhatsapp(' + row.toString() + ')"><i class="fa fa-whatsapp" aria-hidden="true"></i></div>' +
+                '<div class="mx-1 btn btn-secondary" onclick="generalShare(' + row.toString() + ')" > <i class="fa fa-share-alt" aria-hidden="true"></i></div>' +
+                '<div class="mx-1 btn btn-secondary" onclick="copyToClipboard(' + row.toString() + ')" > <i class="fa fa-copy" aria-hidden="true"></i></div>' +
+
+                '</div>');
+        }
         var formatter = new google.visualization.PatternFormat(
             '<pre>{0}</pre>');
         formatter.format(this.currentDataTable, [1]);
@@ -162,6 +171,14 @@ TableQueryWrapper.prototype.handleResponse = function (response) {
     }
 };
 
+TableQueryWrapper.prototype.getRowSummary = function (row) {
+    if (this.currentDataTable) {
+        return {
+            name: this.currentDataTable.getValue(row, 0),
+            lyric: this.currentDataTable.getValue(row, 1)
+        }
+    }
+};
 
 /** Handles a sort event with the given properties. Will page to page=0. */
 TableQueryWrapper.prototype.handleSort = function (properties) {
