@@ -100,11 +100,10 @@
 
         function copyToClipboard(row) {
             detail = tableQueryWrapper.getRowSummary(row);
-            str = '<h2 style="font-size:16px; font-family:PingFangHK-Regular,Microsoft JhengHei,sans-serif;">' + detail.name + '</h2>' +
-                '<pre>' + detail.lyric + '</pre>';
+            str = detail.name + '\n\n' + detail.lyric;
 
             function listener(e) {
-                e.clipboardData.setData("text/html", str);
+                e.clipboardData.setData("text/plain", str);
                 e.preventDefault();
             }
             document.addEventListener("copy", listener);
