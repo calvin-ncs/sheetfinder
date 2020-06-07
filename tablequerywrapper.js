@@ -111,7 +111,7 @@ TableQueryWrapper.prototype.handleResponse = function (response) {
     } else {
         this.currentDataTable = response.getDataTable();
 
-        this.currentDataTable.addColumn('string', 'Share');
+        this.currentDataTable.addColumn('string', 'Lyric');
         //var formatter3 = new google.visualization.PatternFormat('<div class="text-center"><div class="mx-1 btn btn-secondary" onclick="shareWithWhatsapp(this)"><i class="fa fa-whatsapp" aria-hidden="true"></i><p style="display:none">{0}\n\n{1}</p></div><div class= "mx-1 btn btn-secondary" onclick = "generalShare(this)" > <i class="fa fa-share-alt" aria-hidden="true"></i><p style="display:none">{0}\n\n{1}</p></div ></div > ');
         //formatter3.format(this.currentDataTable, [0, 1], 4);
 
@@ -120,7 +120,7 @@ TableQueryWrapper.prototype.handleResponse = function (response) {
                 '<div class="text-center">' +
                 '<div class="mx-1 btn btn-secondary" onclick="shareWithWhatsapp(' + row.toString() + ')"><i class="fa fa-whatsapp" aria-hidden="true"></i></div>' +
                 '<div class="mx-1 btn btn-secondary" onclick="generalShare(' + row.toString() + ')" > <i class="fa fa-share-alt" aria-hidden="true"></i></div>' +
-                '<div class="mx-1 btn btn-secondary" onclick="copyToClipboard(' + row.toString() + ')" > <i class="fa fa-copy" aria-hidden="true"></i></div>' +
+                '<div class="mx-1 btn btn-secondary" onclick="showDetail(' + row.toString() + ')" > <i class="fa fa-search" aria-hidden="true"></i></div>' +
 
                 '</div>');
         }

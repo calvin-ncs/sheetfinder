@@ -99,7 +99,6 @@
         }
 
         function copyToClipboard(row) {
-
             detail = tableQueryWrapper.getRowSummary(row);
             str = '<h2 style="font-size:16px; font-family:PingFangHK-Regular,Microsoft JhengHei,sans-serif;">' + detail.name + '</h2>' +
                 '<pre>' + detail.lyric + '</pre>';
@@ -111,6 +110,22 @@
             document.addEventListener("copy", listener);
             document.execCommand("copy");
             document.removeEventListener("copy", listener);
+        }
+
+        function showDetail(row) {
+            var title = document.getElementById('detail-display-title');
+            var details = document.getElementById('detail-display-details');
+            var util = document.getElementById('detail-display-utilities');
+
+            util.innerHTML = '<div class="mx-1 btn btn-outline-secondary" onclick="copyToClipboard(' + row.toString() + ')" > <i class="fa fa-copy"></i></div>';
+            util.innerHTML += '<div class="mx-1 btn btn-outline-secondary" onclick="shareWithWhatsapp(' + row.toString() + ')"><i class="fa fa-whatsapp" aria-hidden="true"></i></div>';
+            util.innerHTML += '<div class="mx-1 btn btn-outline-secondary" onclick="generalShare(' + row.toString() + ')" > <i class="fa fa-share-alt" aria-hidden="true"></i></div>';
+
+            detail = tableQueryWrapper.getRowSummary(row);
+            title.innerHTML = detail.name;
+            details.innerHTML = detail.lyric;
+
+            $('#detail-display').modal('show');
         }
 
     </script>
@@ -182,7 +197,6 @@
         </div>
 
         <!-- Modal -->
-        <!--
         <div class="modal fade" id="detail-display" tabindex="-1" role="dialog" aria-labelledby="detail-display-title"
             aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
@@ -190,17 +204,16 @@
                     <div class="modal-header">
                         <h5 class="modal-title" id="detail-display-title"></h5>
 
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"
-                            onClick="tableQueryWrapper.clearSelection(); ">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body">
                         <div class="container-fluid">
-                            <div class="row" id="detail-display-links"></div>
+                            <div class="row" id="detail-display-utilities"></div>
                             <div class="row">
                                 <pre>
-                                <p id="detail-display-details"></p>
+                                    <p id="detail-display-details"></p>
                                 </pre>
                             </div>
                         </div>
@@ -208,7 +221,7 @@
                 </div>
             </div>
         </div>
-        -->
+    </div>
     </div>
 </body>
 
