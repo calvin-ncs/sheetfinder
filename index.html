@@ -161,7 +161,6 @@
 
         function addSong(id) {
 
-            console.log('add song');
             if (!songList.map(song => song.id).includes(id)) {
 
                 // if not already added
@@ -180,53 +179,64 @@
         }
 
         function removeSong(id) {
-
-            console.log('remove song');
             songList = songList.filter(song => song.id != id);
             updateSongListItems();
+
+            $('.dropdown-toggle').dropdown()
         }
 
         function showListedSongs() {
             var title = document.getElementById('detail-display-title');
             var details = document.getElementById('detail-display-details');
-            var util = document.getElementById('detail-display-utilities');
-
-            util.innerHTML = '<div class="mx-1 btn btn-outline-secondary" onclick="copyToClipboard(-1)" > <i class="fa fa-copy"></i></div>';
-            util.innerHTML += '<div class="mx-1 btn btn-outline-secondary" onclick="shareWithWhatsapp(-1)"><i class="fa fa-whatsapp" aria-hidden="true"></i></div>';
-            util.innerHTML += '<div class="mx-1 btn btn-outline-secondary" onclick="generalShare(-1)" > <i class="fa fa-share-alt" aria-hidden="true"></i></div>';
-
             title.innerHTML = '歌單';
 
-            songList.forEach(song => {
-                details.innerHTML += '<h3>' + song.name + '</h3>';
+            if (songList.length > 0) {
+                var util = document.getElementById('detail-display-utilities');
 
-                if (song.file != null) {
-                    details.innerHTML += '<div class="px-1"><a class="btn btn-secondary" target="_blank" href="' + song.file + '"><i class="far fa-file"></i></a></div>';
-                }
+                util.innerHTML = '<div class="mx-1 btn btn-outline-secondary" onclick="copyToClipboard(-1)" > <i class="fa fa-copy"></i></div>';
+                util.innerHTML += '<div class="mx-1 btn btn-outline-secondary" onclick="shareWithWhatsapp(-1)"><i class="fa fa-whatsapp" aria-hidden="true"></i></div>';
+                util.innerHTML += '<div class="mx-1 btn btn-outline-secondary" onclick="generalShare(-1)" > <i class="fa fa-share-alt" aria-hidden="true"></i></div>';
 
-                if (song.link != null) {
-                    details.innerHTML += '<div class="px-1"><a class="btn btn-secondary" target="_blank" href="' + song.link + '"><i class="fa fa-link"></i></a></div>';
+                songList.forEach(song => {
+                    details.innerHTML += '<h3>' + song.name + '</h3>';
 
-                }
+                    if (song.file != null) {
+                        details.innerHTML += '<div class="px-1"><a class="btn btn-secondary" target="_blank" href="' + song.file + '"><i class="far fa-file"></i></a></div>';
+                    }
 
-
-                details.innerHTML += '<pre>' + song.lyric + '</pre>';
-            });
-
-
+                    if (song.link != null) {
+                        details.innerHTML += '<div class="px-1"><a class="btn btn-secondary" target="_blank" href="' + song.link + '"><i class="fa fa-link"></i></a></div>';
+                    }
+                    details.innerHTML += '<pre>' + song.lyric + '</pre>';
+                });
+            }
+            else {
+                details.innerHTML = "<h3>請先加入詩歌</h3>";
+            }
             $('#detail-display').modal('show');
         }
 
         function updateSongListItems() {
 
-            console.log(songList);
-
-            songListContainer.innerHTML = '';
+            if (songList.length > 0) {
+                songListContainer.innerHTML += '<a class="dropdown-item" data-toggle="modal" data-target="#confirmClearSongList">清除所有</a>';
+                songListContainer.innerHTML += '<a class="dropdown-item" onclick="showListedSongs()">顯示歌單內容</a>';
+                songListContainer.innerHTML += '<div class="dropdown-divider"></div>';
+            }
+            else {
+                songListContainer.innerHTML = '<span>請先加入詩歌</span>';
+            }
             songList.forEach(song => {
-                songListContainer.innerHTML += '<div class="dropdown-item nav-link">';
-                songListContainer.innerHTML += '<p>' + song.name + '</p>';
-                songListContainer.innerHTML += '<a onclick="removeSong(' + song.id.toString() + ')"><i style="color:red" class="fa fa-minus-circle" aria-hidden="true"></i></a>';
-                songListContainer.innerHTML += '</div>';
+                innerHTML = '';
+                innerHTML += '<div class="dropdown-item nav-link">';
+                innerHTML += '    <div class="d-flex flex-nowrap">';
+                innerHTML += '        <div class="mx-1" >' + song.name + '</div>';
+                innerHTML += '        <div class="mx-auto"></div>';
+                innerHTML += '        <div class="mx-1"><a onclick="removeSong(' + song.id.toString() + ');"><i style="color:red" class="fa fa-minus-circle" aria-hidden="true"></i></a></div>';
+                innerHTML += '    </div>';
+                innerHTML += '</div>';
+
+                songListContainer.innerHTML += innerHTML;
             });
 
             if (songList.length > 0) {
@@ -275,20 +285,20 @@
                             onclick="handleNextPage()"><i class="fas fa-angle-right"></i></button>
                     </div>
                 </div>
-                <div class="navbar-nav col-4 mr-auto">
+                <div class="navbar-nav mr-auto">
                     <li class=" nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        <a class="btn btn-light dropdown-toggle" href="#" id="navbarDropdown" role="button"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             歌單
-                            <div class="badge badge-secondary" style="visibility:hidden" id="song-count">0</div>
+                            <div class="badge badge-danger" style="visibility:hidden" id="song-count">0</div>
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <div id="song-list"></div>
-                            <div class="dropdown-divider"></div>
-                            <a class="dropdown-item" onclick="clearAllSong()">清除所有</a>
-                            <a class="dropdown-item" onclick="showListedSongs()">顯示歌單項目</a>
+                            <div class="mx-2" style="width: 200px;" id="song-list">
+                                <span>請先加入詩歌</span>
+                            </div>
                         </div>
                     </li>
+
                 </div>
                 <div class="form-inline col-auto">
                     <div class="form-group">
@@ -321,6 +331,24 @@
         </div>
 
         <!-- Modal -->
+        <div class="modal fade" id="confirmClearSongList" tabindex="-1" role="dialog"
+            aria-labelledby="confirmClearSongListLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmClearSongListLabel">清除所有詩歌？</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="clearAllSong();" data-dismiss="modal">
+                            確定</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="modal fade" id="detail-display" tabindex="-1" role="dialog" aria-labelledby="detail-display-title"
             aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">

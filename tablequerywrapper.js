@@ -120,11 +120,12 @@ TableQueryWrapper.prototype.handleResponse = function (response) {
             this.currentDataTable.setCell(row, 5, row);
 
             this.currentDataTable.setCell(row, 4,
-                '<div class="text-center">' +
-                '<div class="mx-1 btn btn-secondary" onclick="shareWithWhatsapp(' + row.toString() + ')"><i class="fa fa-whatsapp" aria-hidden="true"></i></div>' +
+                '<div class="row flex-d flex-nowrap">' +
+                '<div class="mx-1 btn btn-success" onclick="shareWithWhatsapp(' + row.toString() + ')"><i class="fa fa-whatsapp" aria-hidden="true"></i></div>' +
                 '<div class="mx-1 btn btn-secondary" onclick="generalShare(' + row.toString() + ')" > <i class="fa fa-share-alt" aria-hidden="true"></i></div>' +
-                '<div class="mx-1 btn btn-secondary" onclick="showDetail(' + row.toString() + ')" > <i class="fa fa-search" aria-hidden="true"></i></div>' +
-                '<div class="mx-1 btn btn-secondary" onclick="addSong(' + row.toString() + ')" > <i class="fa fa-plus" aria-hidden="true"></i></div>' +
+                '<div class="mx-1 btn btn-primary" onclick="showDetail(' + row.toString() + ')" > <i class="fa fa-search" aria-hidden="true"></i></div>' +
+                '<div class="mx-auto"></div>' +
+                '<div class="mx-1 my-auto" onclick="addSong(' + row.toString() + ')" > <i class="fa fa-plus-circle" style="color:red" aria-hidden="true"></i></div>' +
                 '</div>');
         }
         var formatter = new google.visualization.PatternFormat(
