@@ -94,7 +94,7 @@ TableQueryWrapper.prototype.sendAndDraw = function () {
 
     this.query.abort();
     var queryClause = this.selectClause + ' ' + this.whereClause + ' ' + this.sortQueryClause + ' ' + this.pageQueryClause;
-    //console.log(queryClause);
+    console.log(queryClause);
 
     this.query.setQuery(queryClause);
     this.table.setSelection([]);
@@ -111,17 +111,20 @@ TableQueryWrapper.prototype.handleResponse = function (response) {
     } else {
         this.currentDataTable = response.getDataTable();
 
-        this.currentDataTable.addColumn('string', 'Lyric');
+        this.currentDataTable.addColumn('string', 'Function');
+        this.currentDataTable.addColumn('number', 'index');        // F
         //var formatter3 = new google.visualization.PatternFormat('<div class="text-center"><div class="mx-1 btn btn-secondary" onclick="shareWithWhatsapp(this)"><i class="fa fa-whatsapp" aria-hidden="true"></i><p style="display:none">{0}\n\n{1}</p></div><div class= "mx-1 btn btn-secondary" onclick = "generalShare(this)" > <i class="fa fa-share-alt" aria-hidden="true"></i><p style="display:none">{0}\n\n{1}</p></div ></div > ');
         //formatter3.format(this.currentDataTable, [0, 1], 4);
 
         for (row = 0; row < this.currentDataTable.getNumberOfRows(); row++) {
+            this.currentDataTable.setCell(row, 5, row);
+
             this.currentDataTable.setCell(row, 4,
                 '<div class="text-center">' +
                 '<div class="mx-1 btn btn-secondary" onclick="shareWithWhatsapp(' + row.toString() + ')"><i class="fa fa-whatsapp" aria-hidden="true"></i></div>' +
                 '<div class="mx-1 btn btn-secondary" onclick="generalShare(' + row.toString() + ')" > <i class="fa fa-share-alt" aria-hidden="true"></i></div>' +
                 '<div class="mx-1 btn btn-secondary" onclick="showDetail(' + row.toString() + ')" > <i class="fa fa-search" aria-hidden="true"></i></div>' +
-
+                '<div class="mx-1 btn btn-secondary" onclick="addSong(' + row.toString() + ')" > <i class="fa fa-plus" aria-hidden="true"></i></div>' +
                 '</div>');
         }
         var formatter = new google.visualization.PatternFormat(
@@ -174,8 +177,11 @@ TableQueryWrapper.prototype.handleResponse = function (response) {
 TableQueryWrapper.prototype.getRowSummary = function (row) {
     if (this.currentDataTable) {
         return {
+            id: this.currentDataTable.getValue(row, 5),
             name: this.currentDataTable.getValue(row, 0),
-            lyric: this.currentDataTable.getValue(row, 1)
+            lyric: this.currentDataTable.getValue(row, 1),
+            file: this.currentDataTable.getValue(row, 2),
+            link: this.currentDataTable.getValue(row, 3)
         }
     }
 };
@@ -205,35 +211,6 @@ TableQueryWrapper.prototype.handlePage = function (properties) {
         this.sendAndDraw();
     }
 };
-
-// TableQueryWrapper.prototype.handleSelect = function (properties) {
-// var selection = this.table.getSelection();
-// if (selection.length > 0) {
-//     var selRow = selection[0].row;
-
-//     var title = document.getElementById('detail-display-title');
-//     var btns = document.getElementById('detail-display-links');
-//     var details = document.getElementById('detail-display-details');
-
-//     title.innerHTML = this.currentDataTable.getValue(selRow, 0);
-
-//     var _file = this.currentDataTable.getValue(selRow, 2);
-//     var _link = this.currentDataTable.getValue(selRow, 3);
-
-//     btns.innerHTML = '';
-//     if (_file && _file.length > 0) {
-//         btns.innerHTML += '<div class="col"><a class="btn btn-secondary" href="' + _file + '"><i class="far fa-file"></i></a></div>'
-//     }
-
-//     if (_link && _link.length > 0) {
-//         btns.innerHTML += '<div class="col"><a class="btn btn-secondary" href="' + _link + '"><i class="fas fa-link"></i></a></div>';
-//     }
-//     details.innerHTML = this.currentDataTable.getValue(selRow, 1).trim();
-
-//     $('#detail-display').modal('show');
-// }
-// };
-
 
 /**
  * Sets the pageQueryClause and table options for a new page request.
