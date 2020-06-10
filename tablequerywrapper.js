@@ -40,7 +40,7 @@ var TableQueryWrapper = function (query, container, selectClause, whereClause, o
         'headerRow': 'default',
         'tableRow': 'default',
         'oddTableRow': 'default',
-        'selectedTableRow': 'table-info',
+        'selectedTableRow': 'default',
         'hoverTableRow': 'table-hover',
         'headerCell': 'h5 text-center',
         'tableCell': 'h6',

@@ -155,8 +155,11 @@
         }
 
         function clearAllSong() {
-            songList = [];
+            songList.splice(0, songList.length);
+
             updateSongListItems();
+
+            $('#confirmClearSongList').modal('hide');
         }
 
         function addSong(id) {
@@ -219,8 +222,9 @@
         function updateSongListItems() {
 
             if (songList.length > 0) {
+                songListContainer.innerHTML = '';
+                songListContainer.innerHTML += '<a class="dropdown-item active" onclick="showListedSongs()">顯示歌單內容</a>';
                 songListContainer.innerHTML += '<a class="dropdown-item" data-toggle="modal" data-target="#confirmClearSongList">清除所有</a>';
-                songListContainer.innerHTML += '<a class="dropdown-item" onclick="showListedSongs()">顯示歌單內容</a>';
                 songListContainer.innerHTML += '<div class="dropdown-divider"></div>';
             }
             else {
@@ -228,7 +232,7 @@
             }
             songList.forEach(song => {
                 innerHTML = '';
-                innerHTML += '<div class="dropdown-item nav-link">';
+                innerHTML += '<div class="px-4 py-1">';      // class="dropdown-item nav-link"
                 innerHTML += '    <div class="d-flex flex-nowrap">';
                 innerHTML += '        <div class="mx-1" >' + song.name + '</div>';
                 innerHTML += '        <div class="mx-auto"></div>';
@@ -261,7 +265,7 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarToggler">
                 <div class="form-inline mr-auto">
-                    <div class="form-group">
+                    <div class="form-group mx-1">
                         <div class="input-group-prepend">
                             <span class="input-group-text">顯示</span>
                         </div>
@@ -273,9 +277,8 @@
                             <option value="-1">全部</option>
                         </select>
                     </div>
-                </div>
-                <div class="form-inline col-auto mr-auto">
-                    <div class="form-group ">
+
+                    <div class="form-group mx-1">
                         <div class="input-group-prepend">
                             <span class="input-group-text">分頁</span>
                         </div>
@@ -285,11 +288,11 @@
                             onclick="handleNextPage()"><i class="fas fa-angle-right"></i></button>
                     </div>
                 </div>
-                <div class="navbar-nav mr-auto">
+                <div class="navbar-nav col-4">
                     <li class=" nav-item dropdown">
-                        <a class="btn btn-light dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        <a class="btn btn-outline-secondary dropdown-toggle" href="#" id="navbarDropdown" role="button"
                             data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            歌單
+                            <span class="px-4">歌單</span>
                             <div class="badge badge-danger" style="visibility:hidden" id="song-count">0</div>
                         </a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -342,7 +345,7 @@
                         </button>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" onclick="clearAllSong();" data-dismiss="modal">
+                        <button type="button" class="btn btn-primary" onclick="clearAllSong()">
                             確定</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
                     </div>
