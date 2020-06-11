@@ -6,7 +6,6 @@
     <title>詩歌搜尋</title>
     <link rel="stylesheet" type="text/css"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.0-2/css/all.min.css">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
@@ -23,6 +22,10 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
         integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
         crossorigin="anonymous"></script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/pptxgenjs@3.2.0/dist/pptxgen.bundle.js"></script>
+
     <script type="text/javascript">
         google.charts.load('current', { 'packages': ['table'] });
         google.charts.setOnLoadCallback(init);
@@ -224,8 +227,10 @@
             if (songList.length > 0) {
                 songListContainer.innerHTML = '';
                 songListContainer.innerHTML += '<a class="dropdown-item active" onclick="showListedSongs()">顯示歌單內容</a>';
+                songListContainer.innerHTML += '<a class="dropdown-item " onclick="generatePPT(-1)">生成PPT</a>';
                 songListContainer.innerHTML += '<a class="dropdown-item" data-toggle="modal" data-target="#confirmClearSongList">清除所有</a>';
                 songListContainer.innerHTML += '<div class="dropdown-divider"></div>';
+
             }
             else {
                 songListContainer.innerHTML = '<span>請先加入詩歌</span>';
@@ -249,6 +254,183 @@
             } else {
                 document.getElementById('song-count').style.visibility = 'hidden';
             }
+        }
+
+        function buildNewSlideforSong(pptx, song, page, slideTemplateName) {
+            var page_desc_opt = {
+                x: '10%', y: '90%',
+                color: 'FFFFFF', fontSize: 20,
+                valign: 'middle', align: 'left'
+            }
+            var slide = pptx.addSlide(slideTemplateName);
+
+            slide.addText(song.name + ' ' + page.toString(), page_desc_opt);
+            return slide;
+        }
+
+        function addSlideForSong(pptx, song, slideTemplateName) {
+
+            lines = song.lyric.split('\n');
+            text_opt = {
+                x: '10%', y: '5%', w: '80%', h: '40%',
+                shrinkText: true, isTextBox: true,
+                lang: 'hant',
+                color: 'FFFFFF', fontSize: 60,
+                valign: 'top', align: 'center',
+            };
+
+            page = 1;
+            text = '';
+            numLines = 0;
+
+            lines.forEach(line => {
+                line = line.trim();
+                if (line.length == 0) {
+                    if (text.length > 0) {
+
+                        if (numLines <= 4) {
+                            slide.addText(text, text_opt);
+                            text = '';
+                        }
+                        else {
+                            lineSep = 4;
+                            if (numLines < 7) {
+                                lineSep = 3;
+                            }
+
+                            textList = text.split('\n');
+                            do {
+                                remainList = textList.splice(lineSep);
+                                numLines -= lineSep;
+
+                                console.log(textList);
+                                slide.addText(textList.join('\n'), text_opt);
+
+                                if (numLines > 0) {
+                                    textList = remainList.map((x) => x);
+                                    slide = buildNewSlideforSong(pptx, song, page, slideTemplateName);
+                                    page++;
+                                }
+                            } while (textList.length > lineSep);
+
+                            if (textList.length > 0) {
+                                slide.addText(textList.join('\n'), text_opt);
+                            }
+                        }
+                        text = '';
+                        numLines = 0;
+                    }
+                }
+                else if (['verse', 'chorus', 'coda', 'bridge', 'verse1', 'verse2', 'verse 1', 'verse 2', 'chorus 1', 'chorus 2'].includes(line.toLowerCase())) {
+                    if (text.length > 0) {
+                        if (numLines <= 4) {
+                            slide.addText(text, text_opt);
+                        }
+                        else {
+                            lineSep = 4;
+                            if (numLines < 7) {
+                                lineSep = 3;
+                            }
+
+                            textList = text.split('\n');
+                            do {
+                                remainList = textList.splice(lineSep);
+                                numLines -= lineSep;
+
+                                console.log(textList);
+                                slide.addText(textList.join('\n'), text_opt);
+
+                                if (numLines > 0) {
+                                    textList = remainList.map((x) => x);
+                                    slide = buildNewSlideforSong(pptx, song, page, slideTemplateName);
+                                    page++;
+                                }
+                            } while (textList.length > lineSep);
+
+                            if (textList.length > 0) {
+                                slide.addText(textList.join('\n'), text_opt);
+                            }
+                        }
+                        text = '';
+                        numLines = 0;
+                    }
+                }
+                else {
+
+                    if (numLines == 0) {
+                        // prepare new slide
+                        slide = buildNewSlideforSong(pptx, song, page, slideTemplateName);
+                        text = '';
+                        page++;
+                    }
+
+                    text += line + '\n';
+                    numLines += 1;
+                }
+
+            });
+            if (text.length > 0) {
+                if (numLines <= 4) {
+                    console.log(text);
+                    slide.addText(text, text_opt);
+                }
+                else {
+                    lineSep = 4;
+                    if (numLines < 7) {
+                        lineSep = 3;
+                    }
+
+                    textList = text.split('\n');
+                    do {
+                        remainList = textList.splice(lineSep);
+                        numLines -= lineSep;
+
+                        console.log(textList);
+                        slide.addText(textList.join('\n'), text_opt);
+
+                        if (numLines > 0) {
+                            textList = remainList.map((x) => x);
+                            slide = buildNewSlideforSong(pptx, song, page, slideTemplateName);
+                            page++;
+                        }
+                    } while (textList.length > lineSep);
+
+                    if (textList.length > 0) {
+                        slide.addText(textList.join('\n'), text_opt);
+                    }
+                }
+            }
+        }
+
+        function generatePPT(row) {
+            let pptx = new PptxGenJS();
+            pptx.layout = "LAYOUT_WIDE";
+
+            pptx.defineSlideMaster({
+                title: "LyricsSlide",
+                bkgd: { path: 'ppt_img/astronomy-constellation-cosmos-dark-433155.jpg' },
+            });
+
+
+            fname = 'untitled.pptx';
+            if (row < 0) {
+                fname = '';
+                songList.forEach(song => {
+                    addSlideForSong(pptx, song, "LyricsSlide");
+                    fname += song.name + ' ';
+                });
+                fname = fname.substr(0, fname.length - 1);
+                fname += '.pptx';
+            }
+            else {
+                detail = tableQueryWrapper.getRowSummary(row);
+                addSlideForSong(pptx, detail, "LyricsSlide");
+
+                fname = detail.name + '.pptx';
+            }
+
+
+            pptx.writeFile(fname);
         }
 
     </script>
