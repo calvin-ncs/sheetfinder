@@ -294,12 +294,12 @@
                         }
                         else {
                             lineSep = 4;
-                            if (numLines < 7) {
-                                lineSep = 3;
-                            }
 
                             textList = text.split('\n');
                             do {
+                                if (numLines > 4 && numLines < 7) {
+                                    lineSep = 3;
+                                }
                                 remainList = textList.splice(lineSep);
                                 numLines -= lineSep;
 
@@ -321,19 +321,20 @@
                         numLines = 0;
                     }
                 }
-                else if (['verse', 'chorus', 'coda', 'bridge', 'verse1', 'verse2', 'verse 1', 'verse 2', 'chorus 1', 'chorus 2'].includes(line.toLowerCase())) {
+                else if (['verse', 'chorus', 'prechorus', 'coda', 'bridge',
+                    'verse1', 'verse2', 'verse 1', 'verse 2', 'verse 3', 'chorus 1', 'chorus 2'].includes(line.toLowerCase())) {
                     if (text.length > 0) {
                         if (numLines <= 4) {
                             slide.addText(text, text_opt);
                         }
                         else {
                             lineSep = 4;
-                            if (numLines < 7) {
-                                lineSep = 3;
-                            }
 
                             textList = text.split('\n');
                             do {
+                                if (numLines > 4 && numLines < 7) {
+                                    lineSep = 3;
+                                }
                                 remainList = textList.splice(lineSep);
                                 numLines -= lineSep;
 
@@ -376,12 +377,12 @@
                 }
                 else {
                     lineSep = 4;
-                    if (numLines < 7) {
-                        lineSep = 3;
-                    }
 
                     textList = text.split('\n');
                     do {
+                        if (numLines > 4 && numLines < 7) {
+                            lineSep = 3;
+                        }
                         remainList = textList.splice(lineSep);
                         numLines -= lineSep;
 
@@ -406,7 +407,7 @@
             let pptx = new PptxGenJS();
             pptx.layout = "LAYOUT_WIDE";
 
-            masterList = ["LYRIC_CANDLE", "LYRIC_NIGHT", "LYRIC_SEA", "LYRIC_ANCIENT", "LYRIC_SMILE", "LYRIC_PAINT", "LYRIC_GREEN"];
+            masterList = ["LYRIC_CANDLE", "LYRIC_NIGHT", "LYRIC_SEA", "LYRIC_ANCIENT", "LYRIC_SKY", "LYRIC_PAINT", "LYRIC_GREEN"];
 
             pptx.defineSlideMaster({
                 title: "LYRIC_PLAIN",
@@ -415,7 +416,7 @@
                     placeholder: {
                         options: {
                             name: "title", type: "title",
-                            x: '10%', y: '5%', w: '80%', h: '40%',
+                            x: '10%', y: '5%', w: '80%', h: '45%',
                         },
                         text: "歌詞",
                     }
@@ -430,7 +431,7 @@
                     placeholder: {
                         options: {
                             name: "title", type: "title",
-                            x: '10%', y: '5%', w: '80%', h: '40%',
+                            x: '10%', y: '5%', w: '80%', h: '45%',
                         },
                         text: "歌詞",
                     }
@@ -445,7 +446,7 @@
                     placeholder: {
                         options: {
                             name: "title", type: "title",
-                            x: '10%', y: '5%', w: '80%', h: '40%',
+                            x: '10%', y: '5%', w: '80%', h: '45%',
                         },
                         text: "歌詞",
                     }
@@ -460,7 +461,7 @@
                     placeholder: {
                         options: {
                             name: "title", type: "title",
-                            x: '10%', y: '5%', w: '80%', h: '40%',
+                            x: '10%', y: '5%', w: '80%', h: '45%',
                         },
                         text: "歌詞",
                     }
@@ -475,7 +476,7 @@
                     placeholder: {
                         options: {
                             name: "title", type: "title",
-                            x: '10%', y: '5%', w: '80%', h: '40%',
+                            x: '10%', y: '5%', w: '80%', h: '45%',
                         },
                         text: "歌詞",
                     }
@@ -484,13 +485,13 @@
             });
 
             pptx.defineSlideMaster({
-                title: "LYRIC_SMILE",
-                bkgd: { path: 'ppt_img/smiley-drawing-on-sand-698899.jpg' },
+                title: "LYRIC_SKY",
+                bkgd: { path: 'ppt_img/white-clouds-2114014.jpg' },
                 objects: [{
                     placeholder: {
                         options: {
                             name: "title", type: "title",
-                            x: '10%', y: '5%', w: '80%', h: '40%',
+                            x: '10%', y: '5%', w: '80%', h: '45%',
                         },
                         text: "歌詞",
                     }
@@ -505,7 +506,7 @@
                     placeholder: {
                         options: {
                             name: "title", type: "title",
-                            x: '10%', y: '5%', w: '80%', h: '40%',
+                            x: '10%', y: '5%', w: '80%', h: '45%',
                         },
                         text: "歌詞",
                     }
@@ -520,7 +521,7 @@
                     placeholder: {
                         options: {
                             name: "title", type: "title",
-                            x: '10%', y: '5%', w: '80%', h: '40%',
+                            x: '10%', y: '5%', w: '80%', h: '45%',
                         },
                         text: "歌詞",
                     }
@@ -533,12 +534,19 @@
             if (row < 0) {
                 fname = '';
                 songList.forEach(song => {
-
                     addSlideForSong(pptx, song, masterList[Math.floor(Math.random() * masterList.length)]);//"LYRIC_NIGHT");
                     fname += song.name + ' ';
                 });
-                fname = fname.substr(0, fname.length - 1);
-                fname += '.pptx';
+
+                if (songList.length <= 3) {
+                    fname = fname.substr(0, fname.length - 1);
+                    fname += '.pptx';
+                }
+                else {
+                    var todayDate = new Date().toISOString().slice(0, 10);
+
+                    fname = '詩歌 ' + todayDate + '.pptx';
+                }
             }
             else {
                 detail = tableQueryWrapper.getRowSummary(row);
