@@ -272,7 +272,7 @@
 
             lines = song.lyric.split('\n');
             text_opt = {
-                x: '10%', y: '5%', w: '80%', h: '40%',
+                placeholder: 'title',
                 shrinkText: true, isTextBox: true,
                 lang: 'hant',
                 color: 'FFFFFF', fontSize: 60,
@@ -311,11 +311,11 @@
                                     slide = buildNewSlideforSong(pptx, song, page, slideTemplateName);
                                     page++;
                                 }
-                            } while (textList.length > lineSep);
+                            } while (numLines > 0); // (textList.length > lineSep);
 
-                            if (textList.length > 0) {
-                                slide.addText(textList.join('\n'), text_opt);
-                            }
+                            // if (textList.length > 0) {
+                            //     slide.addText(textList.join('\n'), text_opt);
+                            // }
                         }
                         text = '';
                         numLines = 0;
@@ -345,11 +345,11 @@
                                     slide = buildNewSlideforSong(pptx, song, page, slideTemplateName);
                                     page++;
                                 }
-                            } while (textList.length > lineSep);
+                            } while (numLines > 0); //textList.length > lineSep);
 
-                            if (textList.length > 0) {
-                                slide.addText(textList.join('\n'), text_opt);
-                            }
+                            // if (textList.length > 0) {
+                            //     slide.addText(textList.join('\n'), text_opt);
+                            // }
                         }
                         text = '';
                         numLines = 0;
@@ -393,11 +393,11 @@
                             slide = buildNewSlideforSong(pptx, song, page, slideTemplateName);
                             page++;
                         }
-                    } while (textList.length > lineSep);
+                    } while (numLines > 0); //(textList.length > lineSep);
 
-                    if (textList.length > 0) {
-                        slide.addText(textList.join('\n'), text_opt);
-                    }
+                    // if (textList.length > 0) {
+                    //     slide.addText(textList.join('\n'), text_opt);
+                    // }
                 }
             }
         }
@@ -406,9 +406,126 @@
             let pptx = new PptxGenJS();
             pptx.layout = "LAYOUT_WIDE";
 
+            masterList = ["LYRIC_CANDLE", "LYRIC_NIGHT", "LYRIC_SEA", "LYRIC_ANCIENT", "LYRIC_SMILE", "LYRIC_PAINT", "LYRIC_GREEN"];
+
             pptx.defineSlideMaster({
-                title: "LyricsSlide",
+                title: "LYRIC_PLAIN",
+                bkgd: '000000',
+                objects: [{
+                    placeholder: {
+                        options: {
+                            name: "title", type: "title",
+                            x: '10%', y: '5%', w: '80%', h: '40%',
+                        },
+                        text: "歌詞",
+                    }
+                },
+                ]
+            });
+
+            pptx.defineSlideMaster({
+                title: "LYRIC_NIGHT",
                 bkgd: { path: 'ppt_img/astronomy-constellation-cosmos-dark-433155.jpg' },
+                objects: [{
+                    placeholder: {
+                        options: {
+                            name: "title", type: "title",
+                            x: '10%', y: '5%', w: '80%', h: '40%',
+                        },
+                        text: "歌詞",
+                    }
+                },
+                ]
+            });
+
+            pptx.defineSlideMaster({
+                title: "LYRIC_CANDLE",
+                bkgd: { path: 'ppt_img/tealight-candle-on-human-palms-783200.jpg' },
+                objects: [{
+                    placeholder: {
+                        options: {
+                            name: "title", type: "title",
+                            x: '10%', y: '5%', w: '80%', h: '40%',
+                        },
+                        text: "歌詞",
+                    }
+                },
+                ]
+            });
+
+            pptx.defineSlideMaster({
+                title: "LYRIC_SEA",
+                bkgd: { path: 'ppt_img/blue-blur-color-dark-932638.jpg' },
+                objects: [{
+                    placeholder: {
+                        options: {
+                            name: "title", type: "title",
+                            x: '10%', y: '5%', w: '80%', h: '40%',
+                        },
+                        text: "歌詞",
+                    }
+                },
+                ]
+            });
+
+            pptx.defineSlideMaster({
+                title: "LYRIC_ANCIENT",
+                bkgd: { path: 'ppt_img/abstract-ancient-antique-art-235985.jpg' },
+                objects: [{
+                    placeholder: {
+                        options: {
+                            name: "title", type: "title",
+                            x: '10%', y: '5%', w: '80%', h: '40%',
+                        },
+                        text: "歌詞",
+                    }
+                },
+                ]
+            });
+
+            pptx.defineSlideMaster({
+                title: "LYRIC_SMILE",
+                bkgd: { path: 'ppt_img/smiley-drawing-on-sand-698899.jpg' },
+                objects: [{
+                    placeholder: {
+                        options: {
+                            name: "title", type: "title",
+                            x: '10%', y: '5%', w: '80%', h: '40%',
+                        },
+                        text: "歌詞",
+                    }
+                },
+                ]
+            });
+
+            pptx.defineSlideMaster({
+                title: "LYRIC_PAINT",
+                bkgd: { path: 'ppt_img/abstract-abstract-art-abstract-painting-art-1293120.jpg' },
+                objects: [{
+                    placeholder: {
+                        options: {
+                            name: "title", type: "title",
+                            x: '10%', y: '5%', w: '80%', h: '40%',
+                        },
+                        text: "歌詞",
+                    }
+                },
+                ]
+            });
+
+            pptx.defineSlideMaster({
+                title: "LYRIC_GREEN",
+                bkgd: { path: 'ppt_img/shallow-focus-of-green-leaves-1089451.jpg' },
+                objects: [{
+                    placeholder: {
+                        options: {
+                            name: "title", type: "title",
+                            x: '10%', y: '5%', w: '80%', h: '40%',
+                        },
+                        text: "歌詞",
+                    }
+                },
+                ]
             });
 
 
@@ -416,7 +533,8 @@
             if (row < 0) {
                 fname = '';
                 songList.forEach(song => {
-                    addSlideForSong(pptx, song, "LyricsSlide");
+
+                    addSlideForSong(pptx, song, masterList[Math.floor(Math.random() * masterList.length)]);//"LYRIC_NIGHT");
                     fname += song.name + ' ';
                 });
                 fname = fname.substr(0, fname.length - 1);
@@ -424,7 +542,7 @@
             }
             else {
                 detail = tableQueryWrapper.getRowSummary(row);
-                addSlideForSong(pptx, detail, "LyricsSlide");
+                addSlideForSong(pptx, detail, masterList[Math.floor(Math.random() * masterList.length)]);//"LYRIC_NIGHT");
 
                 fname = detail.name + '.pptx';
             }
