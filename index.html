@@ -197,24 +197,52 @@
             title.innerHTML = '歌單';
 
             if (songList.length > 0) {
+
                 var util = document.getElementById('detail-display-utilities');
 
-                util.innerHTML = '<div class="mx-1 btn btn-outline-secondary" onclick="copyToClipboard(-1)" > <i class="fa fa-copy"></i></div>';
+                util.innerHTML = '<h5>分享全部歌詞：</h5>';
+                util.innerHTML += '<div class="mx-1 btn btn-outline-secondary" onclick="copyToClipboard(-1)" > <i class="fa fa-copy"></i></div>';
                 util.innerHTML += '<div class="mx-1 btn btn-outline-secondary" onclick="shareWithWhatsapp(-1)"><i class="fa fa-whatsapp" aria-hidden="true"></i></div>';
                 util.innerHTML += '<div class="mx-1 btn btn-outline-secondary" onclick="generalShare(-1)" > <i class="fa fa-share-alt" aria-hidden="true"></i></div>';
 
+                tabs = '<nav><div class="nav nav-tabs" id="nav-tab" role="tablist">';
+                i = 0;
                 songList.forEach(song => {
-                    details.innerHTML += '<h3>' + song.name + '</h3>';
+                    tabs += '<a class="nav-item nav-link ' + ((i == 0) ? 'active' : '') + '" id="nav-' + i.toString() + '-tab" data-toggle="tab" href="#nav-' + i.toString() + '" role="tab" aria-controls="nav-' + i.toString() + '" aria-selected="' + ((i == 0) ? 'true' : 'false') + '">' + song.name + '</a>';
+                    i++;
+                });
+
+                tabs += '</div></nav>';
+
+                i = 0;
+                tabs += '<div class="tab-content" id="nav-tabContent">';
+                songList.forEach(song => {
+                    tabs += '<div class="tab-pane fade show ' + ((i == 0) ? 'active' : '') + '" id="nav-' + i.toString() + '" role="tabpanel" aria-labelledby="nav-' + i.toString() + '-tab">';
 
                     if (song.file != null) {
-                        details.innerHTML += '<div class="px-1"><a class="btn btn-secondary" target="_blank" href="' + song.file + '"><i class="far fa-file"></i></a></div>';
+                        tabs += '<div class="px-1"><a class="btn btn-secondary" target="_blank" href="' + song.file + '"><i class="far fa-file"></i></a></div>';
                     }
 
                     if (song.link != null) {
-                        details.innerHTML += '<div class="px-1"><a class="btn btn-secondary" target="_blank" href="' + song.link + '"><i class="fa fa-link"></i></a></div>';
+                        tabs += '<div class="px-1"><a class="btn btn-secondary" target="_blank" href="' + song.link + '"><i class="fa fa-link"></i></a></div>';
                     }
-                    details.innerHTML += '<pre>' + song.lyric + '</pre>';
+
+
+                    tabs += '<br/><br/><pre>' + song.lyric + '</pre></div>';
+
+                    i++;
                 });
+                tabs += '</div>';
+
+
+                details.innerHTML = tabs;
+
+                //onePage = '';
+                // songList.forEach(song => {
+                //     onePage += '<h3>' + song.name + '</h3>';
+                //     onePage += '<pre>' + song.lyric + '</pre><br/>';
+                // });
+
             }
             else {
                 details.innerHTML = "<h3>請先加入詩歌</h3>";
@@ -223,7 +251,6 @@
         }
 
         function updateSongListItems() {
-
             if (songList.length > 0) {
                 songListContainer.innerHTML = '';
                 songListContainer.innerHTML += '<a class="dropdown-item active" onclick="showListedSongs()">顯示歌單內容</a>';
