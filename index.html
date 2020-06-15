@@ -13,9 +13,7 @@
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
-        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
-        crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
         crossorigin="anonymous"></script>
@@ -191,6 +189,11 @@
             $('.dropdown-toggle').dropdown()
         }
 
+        function isNotLyric(line) {
+            return (['verse', 'chorus', 'prechorus', 'coda', 'bridge', 'ending',
+                'verse1', 'verse2', 'verse 1', 'verse 2', 'verse 3', 'chorus 1', 'chorus 2'].includes(line.toLowerCase()));
+        }
+
         function showListedSongs() {
             var title = document.getElementById('detail-display-title');
             var details = document.getElementById('detail-display-details');
@@ -255,9 +258,9 @@
                 songListContainer.innerHTML = '';
                 songListContainer.innerHTML += '<a class="dropdown-item active" onclick="showListedSongs()">顯示歌單內容</a>';
                 songListContainer.innerHTML += '<a class="dropdown-item " onclick="generatePPT(-1)">生成PPT</a>';
+                songListContainer.innerHTML += '<a class="dropdown-item " onclick="generateObsHtml(-1)">生成影片subtitle</a>';
                 songListContainer.innerHTML += '<a class="dropdown-item" data-toggle="modal" data-target="#confirmClearSongList">清除所有</a>';
                 songListContainer.innerHTML += '<div class="dropdown-divider"></div>';
-
             }
             else {
                 songListContainer.innerHTML = '<span>請先加入詩歌</span>';
@@ -348,8 +351,7 @@
                         numLines = 0;
                     }
                 }
-                else if (['verse', 'chorus', 'prechorus', 'coda', 'bridge', 'ending',
-                    'verse1', 'verse2', 'verse 1', 'verse 2', 'verse 3', 'chorus 1', 'chorus 2'].includes(line.toLowerCase())) {
+                else if (isNotLyric(line)) {
                     if (text.length > 0) {
                         if (numLines <= 4) {
                             slide.addText(text, text_opt);
@@ -556,7 +558,6 @@
                 ]
             });
 
-
             fname = 'untitled.pptx';
             if (row < 0) {
                 fname = '';
@@ -581,9 +582,85 @@
 
                 fname = detail.name + '.pptx';
             }
-
-
             pptx.writeFile(fname);
+        }
+
+        function writeHTMLFileToBrowser(exportName, blobContent) {
+            // STEP 1: Create element
+            let eleLink = document.createElement('a')
+            eleLink.setAttribute('style', 'display:none;')
+            eleLink.dataset.interception = 'off' // @see https://docs.microsoft.com/en-us/sharepoint/dev/spfx/hyperlinking
+            document.body.appendChild(eleLink)
+
+            // STEP 2: Download file to browser
+            // DESIGN: Use `createObjectURL()` (or MS-specific func for IE11) to D/L files in client browsers (FYI: synchronously executed)
+            if (window.navigator.msSaveOrOpenBlob) {
+                // @see https://docs.microsoft.com/en-us/microsoft-edge/dev-guide/html5/file-api/blob
+                let blob = new Blob([blobContent], { type: 'text/html' })
+                eleLink.onclick = function () {
+                    window.navigator.msSaveOrOpenBlob(blob, exportName)
+                }
+                eleLink.click()
+
+                // Clean-up
+                document.body.removeChild(eleLink)
+
+                // Done
+                //return Promise.resolve(exportName)
+            } else if (window.URL.createObjectURL) {
+                let url = window.URL.createObjectURL(new Blob([blobContent], { type: 'text/html' }))
+                eleLink.href = url
+                eleLink.download = exportName
+                eleLink.click()
+
+                // Clean-up (NOTE: Add a slight delay before removing to avoid 'blob:null' error in Firefox Issue#81)
+                // setTimeout(() => {
+                //     window.URL.revokeObjectURL(url)
+                //     document.body.removeChild(eleLink)
+                // }, 100)
+
+                // // Done
+                // return Promise.resolve(exportName)
+            }
+        }
+
+        function generateObsHtml(row) {
+            $.get("ajax/subtitle.html", function (page) {
+                // slides = $.parseHTML(page);
+
+                var slides = $('<div class="slides" id="root"></div>');
+
+                if (row < 0) {
+                    fname = '';
+
+                    var i = 0;
+                    songList.forEach(song => {
+
+                        $(slides, "#root").append('<section id="song-' + i + '">');
+
+                        lines = song.lyric.split('\n');
+                        lines.forEach(line => {
+                            line = line.trim();
+                            if (line.length == 0 || isNotLyric(line)) {
+                                // do nothig
+                            } else {
+                                // add new slides into html
+                                $(slides, "#song-" + i).children().append('<section class="lyric">' + line + '</section>');
+                            }
+                        });
+                        $(slides, "#root").append('</section>');
+                        i++;
+                    });
+
+                    body = $('<div>').append($(slides, "#root").clone()).html();
+                    page = page.replace("$my_slides", body);
+                    writeHTMLFileToBrowser('lyricSubtitle.html', page);
+                }
+                else {
+                    // todo
+                }
+
+            });
         }
 
     </script>
